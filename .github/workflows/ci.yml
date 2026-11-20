@@ -1,0 +1,102 @@
+# Todas las suites de AGENTS.md en cada push a main y en cada pull request (docs/tests-y-ci.md). El workflow de
+# release la llama también (workflow_call) sobre el commit que publica.
+#
+# Cada acción de terceros va fijada al commit de su versión (en el comentario): una etiqueta se puede mover, un
+# commit no. Para actualizar una: `git ls-remote https://github.com/<dueño>/<acción> 'refs/tags/<versión>^{}'` (el
+# commit al que apunta una etiqueta anotada) o, si no sale nada, `refs/tags/<versión>`. Dependabot las sube solo.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+# Un push nuevo a la misma rama cancela la ejecución anterior, salvo en main: ahí cada commit conserva su resultado.
+# El grupo lleva el workflow que la lanza (al llamarla, el de release): un push a main no cancela la CI de una release.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  frontend:
+    name: Frontend (audit, lint, types, build, Vitest, scripts)
+    runs-on: ubuntu-latest
+    steps:
+      # Sin dejar el token en .git/config: ningún paso posterior lo necesita.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # pnpm sale de `packageManager` (package.json); Node, de .node-version.
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Todo el árbol, también las herramientas de desarrollo: se ejecutan en esta máquina y en la del autor.
+      - run: pnpm audit --audit-level high
+      - run: pnpm lint
+      - run: pnpm build
+      - run: pnpm test
+      # Coherencia del proyecto: versión, mitades de Tauri, lock de skills, CSP, capabilities y notas del release.
+      - run: pnpm test:scripts
+
+  rust:
+    name: Rust (clippy, tests, audit)
+    # Windows: window_controls.rs y la API de WebView2 solo se compilan ahí.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      # generate_context! necesita el frontend construido en dist/.
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      # El toolchain (stable, con clippy y rustfmt) lo instala rustup al primer cargo: sale de rust-toolchain.toml.
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          workspaces: src-tauri
+      - uses: taiki-e/install-action@75a7c0f87bd666af3cdb75c5b9e9d03ab6044e6f # v2.90.6
+        with:
+          tool: cargo-audit
+      # --locked: con las versiones de Cargo.lock, sin actualizarlo.
+      - run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
+      - run: cargo clippy --manifest-path src-tauri/Cargo.toml --locked --all-targets -- -D warnings
+      # El código que solo existe en release (webview.rs: atajos del navegador y menú contextual de WebView2) no se
+      # compila en debug: sin este paso, un PR que lo rompe pasaría la CI. Clippy no genera código, así que el LTO del
+      # perfil release no lo ralentiza.
+      - run: cargo clippy --manifest-path src-tauri/Cargo.toml --locked --release -- -D warnings
+      - run: cargo test --manifest-path src-tauri/Cargo.toml --locked
+      - run: cargo audit --file src-tauri/Cargo.lock
+      # La app real (perfil release, la comprobación de versiones de la CLI y el instalador NSIS) en cada push a main:
+      # un fallo de empaquetado no espera al release. Ni en los PR (tarda) ni cuando la llama el release, que compila
+      # lo mismo en su job `build`.
+      - name: Build the app
+        if: github.event_name == 'push'
+        run: pnpm tauri build --ci --bundles nsis --config src-tauri/tauri.local.conf.json -- --locked
+
+  e2e:
+    name: End-to-end (Playwright, axe)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Solo Chromium: la app de escritorio usa WebView2, que es Chromium.
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e

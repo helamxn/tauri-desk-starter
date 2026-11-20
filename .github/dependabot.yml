@@ -1,0 +1,40 @@
+# Dependabot (docs/tests-y-ci.md): cada semana, las dependencias de npm y de Cargo en un solo PR (así las dos mitades de
+# cada plugin de Tauri, la de npm y la de crates.io, suben a la vez y `pnpm test:scripts` no falla a medias), y las
+# acciones de GitHub en otro, fijadas a su commit. El toolchain de Rust (rust-toolchain.toml), en un tercero. Una sola
+# entrada por ecosistema y carpeta: GitHub no admite dos que se solapen.
+version: 2
+
+multi-ecosystem-groups:
+  dependencies:
+    schedule:
+      interval: weekly
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    # Todas: con patrones más estrechos no está documentado qué pasa con las que no encajan.
+    patterns: ["*"]
+    multi-ecosystem-group: dependencies
+    ignore:
+      # Las versiones mayores de TypeScript, solo cuando las admita typescript-eslint (typescript-eslint#10940;
+      # docs/decisiones.md).
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: cargo
+    directory: /src-tauri
+    patterns: ["*"]
+    multi-ecosystem-group: dependencies
+
+  - package-ecosystem: rust-toolchain
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]

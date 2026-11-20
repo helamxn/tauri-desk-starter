@@ -1,0 +1,25 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Ventana principal: eventos y log; la ventana sin marco (barra y botones propios, la zona de Snap Layouts y mostrarla al pintar) y su tema; Keep running; y las actualizaciones (buscar, descargar e instalar; el instalador reabre la app). Sin bandeja, menú ni imagen: la bandeja se crea en Rust",
+  "windows": ["main"],
+  "permissions": [
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "log:allow-log",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
+    "core:window:allow-internal-toggle-maximize",
+    "core:window:allow-is-maximized",
+    "core:window:allow-close",
+    "core:window:allow-start-dragging",
+    "core:window:allow-set-theme",
+    "core:window:allow-show",
+    "allow-set-maximize-button-area",
+    "allow-set-keep-running",
+    "updater:allow-check",
+    "updater:allow-download",
+    "updater:allow-install",
+    "core:resources:allow-close"
+  ]
+}

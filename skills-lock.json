@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "skills": {
+    "ci-cd-and-automation": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ci-cd-and-automation",
+      "computedHash": "64600767be7a517351fd44c43a02365990d092bac60f0323af233da30013656f"
+    },
+    "code-review-and-quality": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/code-review-and-quality",
+      "computedHash": "e7bf00af93c53aa8dc3f0e248f3135542cc5a6c46f7fa8a46a497a0af2dba58a"
+    },
+    "code-simplification": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/code-simplification",
+      "computedHash": "5f457d9b8df1846c4755aedf347bbe04167a501724b582529ca0d75352e5b376"
+    },
+    "debugging-and-error-recovery": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/debugging-and-error-recovery",
+      "computedHash": "3f75e559b91b9df7f324faec74cebbc0581c942b79006b47e9e0a557385d6921"
+    },
+    "doubt-driven-development": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/doubt-driven-development",
+      "computedHash": "99157e67eb9d14e48fbc9f1b49ed319011165c928302c26e5bf5d3eeab14a32b"
+    },
+    "frontend-ui-engineering": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-ui-engineering",
+      "computedHash": "fb599b80eb2507fa1fd080df175a2e06363962489edce4c3d7d3f1d3b80f504b"
+    },
+    "git-workflow-and-versioning": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/git-workflow-and-versioning",
+      "computedHash": "d234a6817401fda29799b0a8262db652e5a7776a6e8a616edd0dc56ea4451b9b"
+    },
+    "incremental-implementation": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/incremental-implementation",
+      "computedHash": "449e4bf724418b494bafbfb9adb5616a8e2091897f224199ce8aadcafa9df673"
+    },
+    "interview-me": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/interview-me",
+      "computedHash": "13d21b6a4e09d1dad0ae4af94efe29fdcfdb86cfcffaccf282e13fcb0704d3ec"
+    },
+    "performance-optimization": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/performance-optimization",
+      "computedHash": "a0127053331350dd7268cf6a09e34a08257a0e6da2bf0a6f27a7aa51db11f146"
+    },
+    "security-and-hardening": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-and-hardening",
+      "computedHash": "dd8088b27abe696a8942044725b6e8583b55f343c95f853494add4ed84031d13"
+    },
+    "shadcn": {
+      "source": "shadcn-ui/ui",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn",
+      "computedHash": "a26aaae83b40c8817efb14f6c2874e6f3e1d9eab7895fde4a05dd61962b83c60"
+    },
+    "spec-driven-development": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/spec-driven-development",
+      "computedHash": "c1a08a2349ae297995b7ca4baee832b0e5b4fe82a7600d515496ff948c7ec45e"
+    },
+    "test-driven-development": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/test-driven-development",
+      "computedHash": "3f667f64bf5b51818324a184382eabc716c0cd0925fb069a0616bd2c96fc1b0d"
+    }
+  }
+}

@@ -1,0 +1,60 @@
+/*
+ * Botones de la ventana (src/lib/window-controls.ts), con las medidas y colores de Windows 11: 46 px de ancho, todo el
+ * alto de la barra, hover y pulsación con el color del texto (sirve en los dos temas) y cerrar en rojo con la X blanca.
+ * El hover y la pulsación de maximizar llegan como data-hover y data-pressed: el ratón lo recibe la ventana nativa
+ * que Windows necesita para Snap Layouts, no el botón. Sin capas: gana a los estilos base de Tailwind.
+ */
+[data-window-controls] {
+  display: flex;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+[data-window-controls] > button {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  color: inherit;
+  /* Fuente del sistema (no se descarga), preparada para pantalla: nítida con cualquier escala. */
+  font: 10px/1 "Segoe Fluent Icons", "Segoe MDL2 Assets";
+  cursor: default;
+  transition: background-color 0.1s;
+}
+
+/* La fuente dibuja estos glifos 0,8 px por encima del centro de su línea (medido en Windows al 125 %): bajados 0,08em
+   quedan centrados y se siguen colocando en píxeles enteros. */
+[data-window-controls] > button > span {
+  position: relative;
+  top: 0.08em;
+}
+
+[data-window-controls] > button:hover,
+[data-window-controls] > button[data-hover] {
+  background-color: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+[data-window-controls] > button:active,
+[data-window-controls] > button[data-pressed] {
+  background-color: color-mix(in srgb, currentColor 20%, transparent);
+}
+
+[data-window-controls] > button[data-control="close"]:hover {
+  background-color: #c42b1c;
+  color: #fff;
+}
+
+[data-window-controls] > button[data-control="close"]:active {
+  background-color: rgb(196 43 28 / 0.9);
+  color: #fff;
+}
+
+/* Fuera del orden de Tab, pero un lector de pantalla puede llevar el foco: que se vea. */
+[data-window-controls] > button:focus-visible {
+  outline: 2px solid;
+  outline-offset: -2px;
+}

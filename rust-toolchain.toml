@@ -1,0 +1,5 @@
+# Toolchain fijado: todas las máquinas y la CI compilan con el mismo Rust, y una versión nueva (con lints nuevos de
+# clippy) no rompe la CI sin cambiar el código. Dependabot propone cada versión estable nueva (.github/dependabot.yml).
+[toolchain]
+channel = "1.100.0"
+components = ["clippy", "rustfmt"]
