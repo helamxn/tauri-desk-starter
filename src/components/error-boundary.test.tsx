@@ -17,6 +17,9 @@ describe("ErrorBoundary and ErrorScreen", () => {
     );
     expect(screen.getByRole("alert")).toHaveTextContent("Something went wrong");
     expect(onCaughtError).toHaveBeenCalledTimes(1);
+    // Sin marco nativo: la pantalla trae su barra (arrastre y botones de la ventana), con el error en el contenido.
+    expect(screen.getByRole("banner")).toHaveAttribute("data-tauri-drag-region");
+    expect(screen.getByRole("main")).toContainElement(screen.getByRole("alert"));
   });
 
   it("reloads the page on request", async () => {

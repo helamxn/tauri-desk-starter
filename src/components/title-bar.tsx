@@ -1,10 +1,9 @@
 import { isTauri } from "@tauri-apps/api/core";
 import { useEffect, useRef, type ReactNode } from "react";
 import { mountWindowControls } from "@/lib/window-controls";
-import { AppNav } from "./app-nav";
 
 /**
- * Barra de título propia (la ventana no tiene marco): zona de arrastre, navegación a la izquierda (sus enlaces no
+ * Barra de título propia (la ventana no tiene marco): zona de arrastre, navegación a la izquierda (`nav`; sus enlaces no
  * arrastran), acciones y, en la app, los botones de la ventana pegados a la derecha (src/lib/window-controls.ts, sin
  * React). En el navegador (Vite, tests e2e) no hay botones de ventana.
  * - Simetría: la barra mide 36 px y sus botones 28 px (icon-sm y sm), así que quedan 4 px arriba y abajo; los mismos 4 px
@@ -15,7 +14,15 @@ import { AppNav } from "./app-nav";
  * - Con un diálogo abierto, una franja invisible (z-60, por encima de los overlays) conserva el arrastre y el doble
  *   clic; los botones de la ventana quedan por encima (z-70) y siguen funcionando, como en una ventana nativa.
  */
-export function TitleBar({ actions, inTauri = isTauri() }: { actions?: ReactNode; inTauri?: boolean }) {
+export function TitleBar({
+  nav,
+  actions,
+  inTauri = isTauri(),
+}: {
+  nav?: ReactNode;
+  actions?: ReactNode;
+  inTauri?: boolean;
+}) {
   const windowControls = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,7 +37,7 @@ export function TitleBar({ actions, inTauri = isTauri() }: { actions?: ReactNode
       data-desktop={inTauri || undefined}
       className="@container/titlebar flex h-9 shrink-0 items-center gap-2 px-1 data-desktop:pr-0"
     >
-      <AppNav />
+      {nav}
       <div data-tauri-drag-region className="h-full min-w-0 flex-1" />
       <div className="flex shrink-0 items-center gap-2">{actions}</div>
       {inTauri && <div ref={windowControls} className="relative z-70 ms-2 flex self-stretch" />}

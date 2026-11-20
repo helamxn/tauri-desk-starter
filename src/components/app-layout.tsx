@@ -2,25 +2,24 @@ import { Outlet } from "@tanstack/react-router";
 import { SettingsMenu } from "@/features/settings/settings-menu";
 import { SettingsProvider } from "@/features/settings/settings-provider";
 import { UpdateIndicator } from "@/features/updater/update-indicator";
-import { TitleBar } from "./title-bar";
+import { AppNav } from "./app-nav";
+import { AppShell } from "./app-shell";
 
-/** Diseño común: la barra arriba (con el indicador de actualización y el menú) y la sección debajo, con su propio scroll; Settings para toda la app. */
+/** Diseño común: la barra arriba (navegación, indicador de actualización y menú) y la sección debajo; Settings para toda la app. */
 export function AppLayout() {
   return (
     <SettingsProvider>
-      <div className="flex h-svh flex-col">
-        <TitleBar
-          actions={
-            <>
-              <UpdateIndicator />
-              <SettingsMenu />
-            </>
-          }
-        />
-        <main className="min-h-0 flex-1 overflow-auto">
-          <Outlet />
-        </main>
-      </div>
+      <AppShell
+        nav={<AppNav />}
+        actions={
+          <>
+            <UpdateIndicator />
+            <SettingsMenu />
+          </>
+        }
+      >
+        <Outlet />
+      </AppShell>
     </SettingsProvider>
   );
 }
